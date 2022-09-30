@@ -3,8 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 import geopandas as gpd
 import os
-API_KEY = "AIzaSyAEteJ0L565ARbnZcBaOtsy11ECE_lZZsU"
-df = pd.read_csv(r'C:\Users\Razvan baban\Desktop\Licenta\baza-de-date-localitati-romania-master\date\Coordonate_localitati.csv')
+API_KEY = " Aici pui API key "
+#API_KEY trebuie creat aici https://developers.google.com/maps/documentation/javascript/get-api-key pentru a folosi mai jos Google Geocoding API
+df = pd.read_csv('Coordonate_localitati.csv')
+#df preia valorile din csv-ul Coordonate_localitati.csv pentru a determina mai jos URL-ul in functie de criteriile noastre de cautare
+#CSV-ul a fost preluat de aici https://github.com/catalin87/baza-de-date-localitati-romania
 dataframe_judete_abrevieri_judete = pd.DataFrame(df, columns=['judet', 'abreviere'])
 caractere_de_inlocuit={'ă':'a', 'î':'i', 'â':'a', 'ș':'s', 'ț':'t'}
 Lista_oferte = []
@@ -149,9 +152,9 @@ def extragere_date(url):
     df_oferte = pd.DataFrame(Dictionar_oferte, columns=["Oferta", "Oras", "Judet", "Pret",
                                                         "Detalii", "Link", "Zona", "Lat", "Long"])
     nume_csv = input("cum doresti sa se numeasca CSV-ul? :")
-    df_oferte.to_csv(fr'C:\Users\Razvan baban\Desktop\Licenta\Program final python licenta\{nume_csv}.csv', index=False,
+    df_oferte.to_csv(f'{nume_csv}.csv', index=False,
                      header=True)
-    xy_table = pd.read_csv(fr'C:\Users\Razvan baban\Desktop\Licenta\Program final python licenta\{nume_csv}.csv')
+    xy_table = pd.read_csv(f'{nume_csv}.csv')
     xy_gdf = gpd.GeoDataFrame(xy_table, geometry=gpd.points_from_xy(xy_table['Long'], xy_table['Lat']))
     print(xy_gdf)
     xy_gdf.plot(markersize=1.5, figsize=(10, 10))
@@ -160,7 +163,6 @@ def extragere_date(url):
     print(xy_gdf)
     nume_sph = input("cum doresti sa se numeasca fisierul shp?: ")
     xy_gdf.to_file(filename=f"{nume_sph}.shp", driver='ESRI Shapefile')
-    os.startfile(fr"C:\Users\Razvan baban\Desktop\Licenta\Program final python licenta\Python proiect final\final\{nume_sph}.shp")
-
+    os.startfile(f'{nume_sph}.shp')
 
 extragere_date(url)
